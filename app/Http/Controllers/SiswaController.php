@@ -16,8 +16,12 @@ class SiswaController extends Controller
     {
         $data = Siswa::all();
 
-        return $data;
-    }
+        //return $data;
+        return response() -> json([
+            "message" => "Load Data Success",
+            "data" => $data
+        ], 200);
+    }        
 
     /**
      * Show the form for creating a new resource.
@@ -37,7 +41,23 @@ class SiswaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //$table = Siswa::create([
+            //"name" => $request -> name,
+            //"gender" => $request -> gender,
+            //"age" => $request -> age
+        //]);
+
+        $table = new Siswa();
+        $table -> name = $request -> name;
+        $table -> gender = $request -> gender;
+        $table -> age = $request -> age;
+        $table -> save();
+
+        //return $table;
+        return response() -> json([
+            "message" => "Store Success",
+            "data" => $table
+        ], 201);
     }
 
     /**
@@ -48,7 +68,12 @@ class SiswaController extends Controller
      */
     public function show($id)
     {
-        //
+        $table = Siswa::find($id);
+        if ($table){
+            return $table;
+        } else {
+            return ["message" => "Data Not Found"];
+        }
     }
 
     /**
@@ -57,10 +82,6 @@ class SiswaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -71,7 +92,17 @@ class SiswaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $table = Siswa::find($id);
+        if ($table) {
+            $table -> name = $request -> name ? $request -> name : $table -> name;
+            $table -> gender = $request -> gender ? $request -> gender : $table -> gender;
+            $table -> age = $request -> age ? $request -> age : $table -> age;
+            $table -> save();
+
+            return $table;
+        } else {
+            return ["message" => "Data Not Found"];
+        }
     }
 
     /**
@@ -82,6 +113,12 @@ class SiswaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $table = Siswa::find($id);
+        if ($table) {
+            $table -> delete();
+            return ["message" => "Delete Success"];
+        } else {
+            return ["message" => "Data Not Found"];
+        }
     }
 }
